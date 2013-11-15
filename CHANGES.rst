@@ -1,3 +1,5 @@
+.. begin_changelog_intro
+
 Changelog
 =========
 
@@ -12,8 +14,104 @@ The changes listed below are divided into four categories.
 Read `r/changelog <http://www.reddit.com/r/changelog>`_ to be notified of
 upstream changes.
 
+.. end_changelog_intro
+
+Visit `the changelog on ReadTheDocs
+<http://praw.readthedocs.org/en/latest/pages/changelog.html>`_ for properly
+formatted links that link to the relevant place in the code overview.
+
+.. begin_changelog_body
+
+PRAW 2.1.11
+-----------
+ * **[FEATURE]** Added :meth:`~praw.objects.Moderatable.ignore_reports` and
+   :meth:`~praw.objects.Moderatable.unignore_reports` to :class:`.Comment` and
+   :class:`.Submission`.
+ * **[BUGFIX]** The ``history`` scope is not required for
+   :meth:`~praw.objects.Redditor.get_comments`, :meth:`.get_overview` and
+   :meth:`.get_submitted` despite the official `reddit documentation
+   <http://www.reddit.com/dev/api#GET_user_{username}_{where}>`_ saying so.
+   Redditors may choose to make their voting record public, in which case no
+   authentication is required for :meth:`.get_disliked` or :meth:`.get_liked`.
+   The ``history`` scope requirement for the above-mentioned methods has been
+   removed.
+
+PRAW 2.1.10
+-----------
+ * **[FEATURE]** Add :meth:`.get_new_subreddits` to return the newest
+   subreddits.
+ * **[FEATURE]** Add the arguments ``save`` and ``send_replies`` to
+   :meth:`~praw.__init__.SubmitMixin.submit`.
+ * **[FEATURE]** Create and add ``history`` scope to
+   :meth:`~praw.objects.Redditor.get_comments`, :meth:`.get_disliked`,
+   :meth:`.get_liked`, :meth:`.get_overview`, :meth:`.get_submitted`,
+   :meth:`.get_hidden` and :meth:`.get_saved`.
+
+PRAW 2.1.9
+----------
+ * **[FEATURE]** :meth:`mark_as_nsfw` and :meth:`unmark_as_nsfw` can now be
+   used if the currently authenticated user is the author of the Submission.
+ * **[FEATURE]** :meth:`~.ModOnlyMixin.get_contributors` can now be used for
+   accessing the contributor list of protected/private subreddits without
+   requiring moderator access. See issue `issue 246
+   <https://github.com/praw-dev/praw/issues/246>`_.
+ * **[BUGFIX]** Fixed :class:`.Comment` erroneously having the methods
+   ``mark_as_nsfw`` and ``unmark_as_nsfw``, despite comments not being able to
+   be marked as NSFW.
+ * **[REDDIT]** Update :meth:`.get_subreddit_recommendations` to handle changed
+   returned data format.
+
+PRAW 2.1.8
+----------
+ * **[FEATURE]** Add :meth:`.get_subreddit_recommendations` to get a
+   recommendation of subreddits based on a list of provided subreddits.
+ * **[FEATURE]** :class:`.Subreddit` now has an ``__repr__`` method. So it's
+   now possible to identify what subreddit the object represents from the human
+   readable representation of the object.
+ * **[FEATURE]** Add :meth:`praw.__init__.UnauthenticatedReddit.get_rising`
+   that returns the rising listing of the front page in the context of the
+   currently logged-in user (if any).
+
+PRAW 2.1.7
+----------
+ * **[FEATURE]** Add methods :meth:`.set_contest_mode` and
+   :meth:`.unset_contest_mode` to :class:`.Submission`, for (un)setting of
+   contest modes. See `this Reddit post
+   <http://www.reddit.com/r/bestof2012/comments/159bww/
+   introducing_contest_mode_a_tool_for_your_voting/>`_
+   for information about contest mode.
+ * **[FEATURE]** Move methods :meth:`.get_liked` and :meth:`.get_liked` to
+   :class:`.Redditor` from :class:`.LoggedInRedditor`. Redditors can make their
+   likes and dislikes public. Having :meth:`.get_liked` and :meth:`.get_liked`
+   on :class:`.Redditor` allows PRAW to access this info.
+ * **[FEATURE]** The ``has_fetched`` attribute has been added to all objects
+   save :class:`.Reddit`, see the `lazy loading
+   <http://praw.readthedocs.org/en/latest/pages/lazy-loading.html>`_ page in
+   PRAW's documentation for more details.
+ * **[BUGFIX]** Fixed a bug that caused the ``timeout`` configuration setting
+   to always be the default 45 irrespective of what it was set to in
+   ``praw.ini``.
+
+PRAW 2.1.6
+----------
+
+ * **[BUGFIX]** PRAW automatically retries failed requests to reddit if the
+   error is likely to be a temporary one. This resulted in spamming reddit if
+   the error occurred after content had been saved to reddit's database.
+   Therefore the following methods will no longer retry failed request
+   :meth:`~praw.__init__.ModConfigMixin.upload_image`,
+   :meth:`~praw.__init__.PrivateMessagesMixin.send_message`,
+   :meth:`~praw.__init__.SubmitMixin.submit`,
+   :meth:`~praw.__init__.UnauthenticatedReddit.send_feedback`,
+   :meth:`~praw.objects.Inboxable.reply` and
+   :meth:`~praw.objects.Submission.add_comment`.
+   Additionally :meth:`~praw.__init__.BaseReddit.request_json` now has the
+   ``retry_on_error`` argument, which if set to ``True`` will prevent retries
+   of the request if it fails.
+
 PRAW 2.1.5
 ----------
+
  * **[FEATURE]** :meth:`~praw.__init__.AuthenticatedReddit.select_flair` method
    added, can be used to change your flair without moderator access on
    subreddits that allow it.
@@ -32,6 +130,7 @@ PRAW 2.1.5
 
 PRAW 2.1.4
 ----------
+
  * **[FEATURE]** :meth:`~praw.__init__.ModOnlyMixin.get_mod_mail` can now be
    used to get moderator mail from individual subreddits, instead of all
    moderated subreddits, just like
@@ -46,17 +145,18 @@ PRAW 2.1.4
    :meth:`~praw.__init__.ModOnlyMixin.get_unmoderated` when calling them from
    :obj:`.Reddit` without giving the subreddit argument explicitly.
  * **[REDDIT]** New fields ``public_traffic`` added to
-   :meth:`~.Subreddit.set_settings` as per the upstream change
+   :meth:`~.Subreddit.set_settings` as per the upstream change.
 
 PRAW 2.1.3
 ----------
+
  * **[FEATURE]** Added :meth:`.UnauthenticatedReddit.get_random_submission`.
  * **[BUGFIX]** Verify that ``sys.stdin`` has ``closed`` attribute before
    checking if the stream is closed.
 
-
 PRAW 2.1.2
 ----------
+
  * **[BUGFIX]** Avoid occasionally processing duplicates in
    :meth:`~praw.helpers.comment_stream`.
  * **[CHANGE]** :meth:`~praw.helpers.comment_stream` yields comments in a
@@ -64,9 +164,9 @@ PRAW 2.1.2
  * **[FEATURE]** Support fetching submission listings for domains via
    :meth:`.get_domain_listing`.
 
-
 PRAW 2.1.1
 ----------
+
  * **[FEATURE]** Added :meth:`praw.helpers.comment_stream` to provide a
    neverending stream of new comments.
  * **[BUGFIX]** Don't cache requests whose responses will result in an
@@ -74,6 +174,7 @@ PRAW 2.1.1
 
 PRAW 2.1.0
 ----------
+
  * **[FEATURE]** PRAW now supports proper rate-limiting and shared caching when
    running multiple processes. See :ref:`multiprocess` for usage information.
  * **[CHANGE]** Remove explicit ``limit`` parameters from functions that
@@ -92,24 +193,24 @@ PRAW 2.1.0
  * **[BUGFIX]** Allow editing non-top-level wiki pages fetched using
    :meth:`.Subreddit.get_wiki_page`.
  * **[BUGFIX]** Fix a bug in :meth:`~Subreddit.submit`. See
-   https://github.com/praw-dev/praw/issues/213
+   https://github.com/praw-dev/praw/issues/213.
  * **[BUGFIX]** Fix a python 3.3 bug in
    :meth:`~.Subreddit.upload_image`. See
-   https://github.com/praw-dev/praw/issues/211
+   https://github.com/praw-dev/praw/issues/211.
 
 PRAW 2.0.15
 -----------
+
  * **[FEATURE]** PRAW can now use a proxy server, see `#206
    <https://github.com/praw-dev/praw/issues/206>`_. The parameter
    ``http_proxy`` (optional) has been added to the configuration file to define
    a proxy server in the form host:ip or http://login:user@host:ip.
 
-
 PRAW 2.0.14
 -----------
+
  * **[BUGFIX]** Prevent potential invalid redirect exception when using
    :meth:`~.Subreddit.get_wiki_page`.
-
 
 PRAW 2.0.13
 -----------
@@ -125,7 +226,7 @@ PRAW 2.0.13
  * **[FEATURE]** Added :meth:`.add_wiki_contributor` and
    :meth:`.remove_wiki_contributor` to manage the list of wiki contributors.
  * **[FEATURE]** Added :meth:`~.Subreddit.get_wiki_page` to fetch an individual
-   WikiPage
+   WikiPage.
  * **[FEATURE]** Added :meth:`~.Subreddit.get_wiki_pages` to get a list of
    WikiPage objects.
  * **[FEATURE]** Wiki pages can be edited through either the
@@ -136,7 +237,6 @@ PRAW 2.0.13
    :meth:`.make_contributor`, and :meth:`.make_moderator` in favor of the
    consistently named :meth:`.add_ban`, :meth:`.remove_ban`,
    :meth:`.add_contributor`, and :meth:`.add_moderator` respectively.
-
 
 PRAW 2.0.12
 -----------
@@ -168,10 +268,11 @@ PRAW 2.0.11
    <http://www.reddit.com/r/changelog/comments/191ngp/
    reddit_change_rising_is_now_its_own_tab_instead/>`_
    has split new and rising into their own independent listings. Use the new
-   :meth:`.get_rising` method instead of the old :meth:`.get_new_by_rising` and
-   :meth:`~.Subreddit.get_new` instead of :meth:`.get_new_by_date`.
+   :meth:`.praw.objects.Subreddit.get_rising` method instead of the old
+   :meth:`.get_new_by_rising` and :meth:`~.Subreddit.get_new` instead of
+   :meth:`.get_new_by_date`.
  * **[CHANGE]** The dependency on ``update_checker`` has been increased from >=
-   0.4 to >= 0.5
+   0.4 to >= 0.5.
  * **[BUGFIX]** After inviting a moderator invite, the cached set of moderated
    subreddits would not be updated with the new subreddit. Causing
    :func:`.restrict_access` to prevent performing moderater actions in the
@@ -226,7 +327,6 @@ PRAW 2.0.6
    :class:`.Subreddit` and base reddit objects. This returns a listings of
    submissions that haven't been approved/removed by a moderator.
 
-
 PRAW 2.0.5
 ----------
 
@@ -248,14 +348,14 @@ PRAW 2.0.3
 
  * **[FEATURE]** Add :meth:`~.Subreddit.delete_image` method to
    :class:`.Subreddit` objects (also callable on the base reddit object with
-   the subreddit as the first argument):
+   the subreddit as the first argument).
  * **[CHANGE]** PRAW now requires version 0.4 of ``update_checker``.
 
 PRAW 2.0.2
 ----------
 
  * **[BUGFIX]** Fixed bug when comparing :class:`.MoreComments` classes in
-   Python 3.x
+   Python 3.x.
 
 PRAW 2.0.1
 ----------
@@ -275,18 +375,18 @@ PRAW 2.0.0
    argument):
 
    * :meth:`~.Subreddit.accept_moderator_invite` -- accept a pending moderator
-     invite
+     invite.
    * :meth:`~.Subreddit.get_mod_log`  -- return ModAction objects for each item
-     (run vars(item), to see available attributes)
+     (run vars(item), to see available attributes).
    * :meth:`~.Subreddit.configure_flair`  -- interface to subreddit flair
-     options
+     options.
    * :meth:`~.Subreddit.upload_image` -- upload an image for the subreddit
-     header or use in CSS
+     header or use in CSS.
 
- * **[FEATURE]** Support 'admin' distinguishing of items via
-   :meth:`.distinguish`
+ * **[FEATURE]** Support 'admin' and `special` distinguishing of items via
+   :meth:`.distinguish`.
  * **[FEATURE]** Ability to specify max-character limit for object-to-string
-   representations via ``output_chars_limit`` in ``praw.ini``
+   representations via ``output_chars_limit`` in ``praw.ini``.
  * **[CHANGE]** Remove ``comments_flat`` property of :class:`.Submission`
    objects. The new :meth:`praw.helpers.flatten_tree` can be used to flatten
    comment trees.
@@ -295,7 +395,7 @@ PRAW 2.0.0
    must now be explicitly called to replace instances of :class:`.MoreComments`
    within the comment tree.
  * **[CHANGE]** The ``content_id`` attribute of :class:`.RedditContentObject`
-   has been renamed to :attr:`.fullname`
+   has been renamed to :attr:`.fullname`.
  * **[CHANGE]** The ``info`` base Reddit instance method has been renamed to
    :meth:`.get_info`.
  * **[CHANGE]** ``get_saved_links`` has been renamed to :meth:`.get_saved` and
@@ -315,8 +415,8 @@ PRAW 2.0.0
    `source <https://github.com/praw-dev/praw/blob/master/praw/errors.py>`_)
    This includes the renaming of:
 
-   * ``BadCaptcha`` to :exc:`.InvalidCaptcha`
-   * ``NonExistantUser`` to :exc:`.InvalidUser`
+   * ``BadCaptcha`` to :exc:`.InvalidCaptcha`.
+   * ``NonExistantUser`` to :exc:`.InvalidUser`.
 
  * **[CHANGE]** Simplify content-limit handling and remove the following
    no-longer necessary parameters from ``praw.ini``:
@@ -339,7 +439,7 @@ PRAW 2.0.0
 PRAW 1.0.16
 -----------
 
- * **[FEATURE]** Add support for r/random
+ * **[FEATURE]** Add support for r/random.
 
 PRAW 1.0.15
 -----------
@@ -352,7 +452,7 @@ PRAW 1.0.15
 PRAW 1.0.14
 -----------
 
- * **[FEATURE]** Extended functionality to Python 3.3
+ * **[FEATURE]** Extended functionality to Python 3.3.
 
 PRAW 1.0.13
 -----------
@@ -418,7 +518,7 @@ PRAW 1.0.7
 
  * **[REDDIT]** New fields ``prev_description_id`` and
    ``prev_public_description_id`` added to :meth:`~.Subreddit.set_settings` as
-   per the upstream change
+   per the upstream change.
 
 PRAW 1.0.6
 ----------
@@ -460,3 +560,5 @@ PRAW 1.0.1
 
 PRAW 1.0.0
 ----------
+
+.. end_changelog_body
